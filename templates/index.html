@@ -28,9 +28,40 @@
            canvas.isDrawingMode = false
            if(!window.localStorage){alert("This function is not supported by your browser."); return;}
            // to PNG
-           window.open(canvas.toDataURL('png'));
+           var windowtab = window.open();
+           var canvasData = canvas.toDataURL('png');
+           windowtab.document.write('<img src="' + canvasData + '">');
            window.alert("Image Saved!");
            canvas.isDrawingMode = true;
+         });
+         $(document).on("click", "#predictbtn", function(){
+            var id = '#dialog';
+            var maskHeight = $(document).height();
+            var maskWidth = $(window).width();
+            $('#mask').css({'width':maskWidth,'height':maskHeight});
+
+
+            $('#mask').fadeIn(500);
+            $('#mask').fadeTo("slow",0.9); 
+
+
+            var winH = $(window).height();
+            var winW = $(window).width();
+
+            $(id).css('top',  winH/2-$(id).height()/2);
+            $(id).css('left', winW/2-$(id).width()/2);
+
+            $(id).fadeIn(2000);  
+            $('.window .close').click(function (e) {
+            e.preventDefault();
+            $('#mask').hide();
+            $('.window').hide();
+            });
+
+            $('#mask').click(function () {
+            $(this).hide();
+            $('.window').hide();
+            });
          });
     </script>
 </head>
@@ -59,7 +90,14 @@
         <form action = "http://localhost:5000/uploader" method = "POST" 
                   enctype = "multipart/form-data" >
             <input type = "file" name = "file"  />
-            <input class="btn btn-success" type = "submit"/>
+            <input id="predictbtn" class="btn btn-success" type = "submit"/>
+            <div id="boxes">
+                <div id="dialog" class="window">
+                    Your Content Goes Here
+                </div>
+            <div id="mask"></div>
+            </div>
+
         </form>
         </div>
     </body>

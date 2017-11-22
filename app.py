@@ -18,9 +18,7 @@ app = Flask(__name__)
 
 FLAGS = None
 
-# pylint: disable=line-too-long
-DATA_URL = 'http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz'
-# pylint: enable=line-too-long
+cwd = os.getcwd();
 
 class NodeLookup(object):
   """Converts integer node ID's to human readable labels."""
@@ -98,14 +96,7 @@ def create_graph():
 
 
 def run_inference_on_image(image):
-  """Runs inference on an image.
-
-  Args:
-    image: Image file name.
-
-  Returns:
-    Nothing
-  """
+  
   if not tf.gfile.Exists(image):
     tf.logging.fatal('File does not exist %s', image)
   image_data = tf.gfile.FastGFile(image, 'rb').read()
@@ -135,25 +126,8 @@ def run_inference_on_image(image):
       human_string = node_lookup.id_to_string(node_id)
       score = predictions[node_id]
       print('%s (score = %.5f)' % (human_string, score))
-
-
-def maybe_download_and_extract():
-  """Download and extract model tar file."""
-  dest_directory = FLAGS.model_dir
-  if not os.path.exists(dest_directory):
-    os.makedirs(dest_directory)
-  filename = DATA_URL.split('/')[-1]
-  filepath = os.path.join(dest_directory, filename)
-  if not os.path.exists(filepath):
-    def _progress(count, block_size, total_size):
-      sys.stdout.write('\r>> Downloading %s %.1f%%' % (
-          filename, float(count * block_size) / float(total_size) * 100.0))
-      sys.stdout.flush()
-    filepath, _ = urllib.request.urlretrieve(DATA_URL, filepath, _progress)
-    print()
-    statinfo = os.stat(filepath)
-    print('Successfully downloaded', filename, statinfo.st_size, 'bytes.')
-  tarfile.open(filepath, 'r:gz').extractall(dest_directory)
+    
+    return [(node_lookup.id_to_string(node_id), float(predictions[node_id])) for node_id in top_k]
 
 @app.route("/")
 def index():
@@ -163,16 +137,15 @@ def index():
 def upload_file():
    if request.method == 'POST':
       f = request.files['file']
-      print("data: ", request.data)
       f.save(f.filename)
       image_handler(f.filename)
 
 def image_handler(fname):
-    maybe_download_and_extract()
     image = (FLAGS.image_file if FLAGS.image_file else
       os.path.join(FLAGS.model_dir, fname))
-    predictions = dict(run_inference_on_image(image))
-    print(predictions)
+    print("Image: ", image)
+    predictions = run_inference_on_image(image)
+    print("pridictions" , predictions)
     return jsonify(predictions=predictions)
 
 def main(_):
@@ -189,7 +162,7 @@ if __name__ == "__main__":
     parser.add_argument(
       '--model_dir',
       type=str,
-      default='/ETProject',
+      default=cwd,
       help="""\
       Path to classify_image_graph_def.pb,
       imagenet_synset_to_human_label_map.txt, and
