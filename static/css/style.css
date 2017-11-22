@@ -6,5 +6,17 @@ p {
 }
 #jumbo1{
     margin-bottom:0;
-    background: #8e44ad;
+    background: #6ed3cf;
+}
+#jumbo2{
+    margin-bottom:0;
+    background: #9068be;
+}
+#jumbo3{
+    margin-bottom:0;
+    background: ##e62739;
+}
+#jumboheader{
+    margin-bottom:0;
+    background: #e1e8f0;
 }

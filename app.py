@@ -16,8 +16,11 @@ from six.moves import urllib
 
 app = Flask(__name__)
 
-# import default command line flags from TensorFlow
 FLAGS = None
+
+# pylint: disable=line-too-long
+DATA_URL = 'http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz'
+# pylint: enable=line-too-long
 
 class NodeLookup(object):
   """Converts integer node ID's to human readable labels."""
@@ -134,6 +137,24 @@ def run_inference_on_image(image):
       print('%s (score = %.5f)' % (human_string, score))
 
 
+def maybe_download_and_extract():
+  """Download and extract model tar file."""
+  dest_directory = FLAGS.model_dir
+  if not os.path.exists(dest_directory):
+    os.makedirs(dest_directory)
+  filename = DATA_URL.split('/')[-1]
+  filepath = os.path.join(dest_directory, filename)
+  if not os.path.exists(filepath):
+    def _progress(count, block_size, total_size):
+      sys.stdout.write('\r>> Downloading %s %.1f%%' % (
+          filename, float(count * block_size) / float(total_size) * 100.0))
+      sys.stdout.flush()
+    filepath, _ = urllib.request.urlretrieve(DATA_URL, filepath, _progress)
+    print()
+    statinfo = os.stat(filepath)
+    print('Successfully downloaded', filename, statinfo.st_size, 'bytes.')
+  tarfile.open(filepath, 'r:gz').extractall(dest_directory)
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -142,19 +163,14 @@ def index():
 def upload_file():
    if request.method == 'POST':
       f = request.files['file']
+      print("data: ", request.data)
       f.save(f.filename)
-      i = Image.open(f)
-      image_handler(i)
+      image_handler(f.filename)
 
-def image_handler(image):
-    create_graph()
-    print("Model loaded")
-
-    node_lookup = NodeLookup()
-    print("Node lookup loaded")
-    
-    print("Img: ")
-    print(image)
+def image_handler(fname):
+    maybe_download_and_extract()
+    image = (FLAGS.image_file if FLAGS.image_file else
+      os.path.join(FLAGS.model_dir, fname))
     predictions = dict(run_inference_on_image(image))
     print(predictions)
     return jsonify(predictions=predictions)
@@ -164,10 +180,16 @@ def main(_):
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    # classify_image_graph_def.pb:
+    #   Binary representation of the GraphDef protocol buffer.
+    # imagenet_synset_to_human_label_map.txt:
+    #   Map from synset ID to a human readable string.
+    # imagenet_2012_challenge_label_map_proto.pbtxt:
+    #   Text representation of a protocol buffer mapping a label to synset ID.
     parser.add_argument(
       '--model_dir',
       type=str,
-      default='/tmp/imagenet',
+      default='/ETProject',
       help="""\
       Path to classify_image_graph_def.pb,
       imagenet_synset_to_human_label_map.txt, and
@@ -188,4 +210,3 @@ if __name__ == "__main__":
     )
     FLAGS, unparsed = parser.parse_known_args()
     tf.app.run(main=main, argv=[sys.argv[0]] + unparsed)
-    

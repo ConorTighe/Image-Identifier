@@ -48,11 +48,14 @@
                         </div>
                 </div>
         </div>
-        <div class="jumbotron" align="center" style="margin-bottom:0;">
+        <div id="jumbo2" class="jumbotron" align="center" style="margin-bottom:0;">
             <canvas id="sheet" width="400" height="400"></canvas>
-            <button id="savepng">Canvas 2 PNG</button>
+            <button id="savepng">Save as PNG</button>
         </div>
-        <div class="jumbotron" align="center" style="margin-bottom:0;">
+        <div id="jumboheader" class="jumbotron" align="center" style="margin-bottom:0;">
+            <h1 >select the image you drew or an already existing image below.</h1>
+        </div>
+        <div id="jumbo3" class="jumbotron" align="center" style="margin-bottom:0;">
         <form action = "http://localhost:5000/uploader" method = "POST" 
                   enctype = "multipart/form-data" >
             <input type = "file" name = "file"  />
