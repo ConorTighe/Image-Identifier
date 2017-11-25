@@ -35,8 +35,12 @@
             }
             img.src = canvas.toDataURL({
             format: 'image/png'
-        });
-       });
+            });
+            });
+            
+            $(document).on("click", "#drawmode", function() {
+            canvas.isDrawingMode = true;
+            });
         }
         
         function readURL(input) {
@@ -72,6 +76,7 @@
         <div id="jumbo2" class="jumbotron" align="center" style="margin-bottom:0;">
             <canvas id="sheet" width="400" height="400"></canvas>
             <button id="savepng">Convert to PNG</button>
+            <button id="drawmode">Drawing mode</button>
         </div>
         <div id="jumboheader" class="jumbotron" align="center" style="margin-bottom:0;">
             <p >select the image you drew or an already existing image below.</p>
@@ -84,5 +89,13 @@
             <input id="predictbtn" class="btn btn-success" type = "submit"/>
         </form>
         </div>
+        <div id="jumbo3" class="jumbotron" align="center" style="margin-bottom:0;">
+        <form action = "http://localhost:5000/imgUploader" method = "POST" 
+                  enctype = "multipart/form-data" >
+            <input type = "file" name = "file" onchange="readURL(this);" />
+            <img id="blah" class="img-thumbnail" src="#" />
+            <input id="predictbtn" class="btn btn-success" type = "submit" value="Image" />
+        </form>
+    </div>
     </body>
 </html>
