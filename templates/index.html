@@ -9,60 +9,50 @@
   <link href="https://fonts.googleapis.com/css?family=Press+Start+2P|Roboto" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script type='text/javascript' src='http://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.4.0/fabric.min.js'></script>
+    <script src="https://rawgit.com/kangax/fabric.js/master/dist/fabric.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    
     <style type='text/css'>
         #sheet {
             border:1px solid black;
         }
     </style>
     <script type='text/javascript'>
-        var canvas = new fabric.Canvas('sheet', { isDrawingMode: true });
-        window.onload=function(){
+       
+        
+        window.onload = function() {
             var canvas = new fabric.Canvas('sheet');
             canvas.isDrawingMode = true;
             canvas.freeDrawingBrush.width = 5;
             canvas.freeDrawingBrush.color = "#ff0000";
+            
+            $(document).on("click", "#savepng", function() {
+            canvas.isDrawingMode = false;
+            var newTab = window.open();
+            var img = new Image();
+            img.onload = function() {
+            newTab.document.body.append(img);
+            }
+            img.src = canvas.toDataURL({
+            format: 'image/png'
+        });
+       });
         }
         
-        $(document).on("click", "#savepng", function(){
-           canvas.isDrawingMode = false
-           if(!window.localStorage){alert("This function is not supported by your browser."); return;}
-           // to PNG
-           var windowtab = window.open();
-           var canvasData = canvas.toDataURL('png');
-           windowtab.document.write('<img src="' + canvasData + '">');
-           window.alert("Image Saved!");
-           canvas.isDrawingMode = true;
-         });
-         $(document).on("click", "#predictbtn", function(){
-            var id = '#dialog';
-            var maskHeight = $(document).height();
-            var maskWidth = $(window).width();
-            $('#mask').css({'width':maskWidth,'height':maskHeight});
+        function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
 
+            reader.onload = function (e) {
+                $('#blah')
+                    .attr('src', e.target.result)
+                    .width(150)
+                    .height(200);
+            };
 
-            $('#mask').fadeIn(500);
-            $('#mask').fadeTo("slow",0.9); 
-
-
-            var winH = $(window).height();
-            var winW = $(window).width();
-
-            $(id).css('top',  winH/2-$(id).height()/2);
-            $(id).css('left', winW/2-$(id).width()/2);
-
-            $(id).fadeIn(2000);  
-            $('.window .close').click(function (e) {
-            e.preventDefault();
-            $('#mask').hide();
-            $('.window').hide();
-            });
-
-            $('#mask').click(function () {
-            $(this).hide();
-            $('.window').hide();
-            });
-         });
+            reader.readAsDataURL(input.files[0]);
+            }
+        }
     </script>
 </head>
 <body>
@@ -74,30 +64,24 @@
                         <p class="lead">For Identifering Images and finding related information!</p>
                         <p class="lead">Powered by</p>
                         <img id="flask" class="img-responsive" src="/static/img/flasklogo.png" align="left" style="height: 150px; width: 320px" />
-                        <img id="reddit" class="img-responsive" src="/static/img/redditlogo.png" align="left" style="height: 150px; width: 320px" />
-                        <img id="tensor" class="img-responsive" src="/static/img/tensorflow.jpg" align="left" style="height: 150px; width: 320px" />
+                        <img id="reddit" class="img-responsive" src="/static/img/fbjs.png" align="left" style="height: 150px; width: 320px" />
+                        <img id="tensor" class="img-responsive" src="/static/img/tensorflow.png" align="left" style="height: 150px; width: 320px" />
                         </div>
                 </div>
         </div>
         <div id="jumbo2" class="jumbotron" align="center" style="margin-bottom:0;">
             <canvas id="sheet" width="400" height="400"></canvas>
-            <button id="savepng">Save as PNG</button>
+            <button id="savepng">Convert to PNG</button>
         </div>
         <div id="jumboheader" class="jumbotron" align="center" style="margin-bottom:0;">
-            <h1 >select the image you drew or an already existing image below.</h1>
+            <p >select the image you drew or an already existing image below.</p>
         </div>
         <div id="jumbo3" class="jumbotron" align="center" style="margin-bottom:0;">
         <form action = "http://localhost:5000/uploader" method = "POST" 
                   enctype = "multipart/form-data" >
-            <input type = "file" name = "file"  />
+            <input type = "file" name = "file" onchange="readURL(this);" />
+            <img id="blah" class="img-thumbnail" src="#" />
             <input id="predictbtn" class="btn btn-success" type = "submit"/>
-            <div id="boxes">
-                <div id="dialog" class="window">
-                    Your Content Goes Here
-                </div>
-            <div id="mask"></div>
-            </div>
-
         </form>
         </div>
     </body>
