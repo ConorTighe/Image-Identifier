@@ -7,6 +7,7 @@ import os.path
 import re
 import sys
 import tarfile
+import json
 from flask import Flask, render_template, request, jsonify
 from PIL import Image
 import requests
@@ -18,17 +19,19 @@ app = Flask(__name__)
 
 FLAGS = None
 
+# Get the current directory
 cwd = os.getcwd();
 
+# This handles the graph for our digits
 def create_graph():
-  """Creates a graph from saved GraphDef file and returns a saver."""
-  # Creates graph from saved graph_def.pb.
+  # Creates graph from saved output.pb for our digits
   with tf.gfile.FastGFile(os.path.join(
       FLAGS.model_dir, 'output.pb'), 'rb') as f:
     graph_def = tf.GraphDef()
     graph_def.ParseFromString(f.read())
     _ = tf.import_graph_def(graph_def, name='')
     
+# This handles the graph for the Inception-v3 1000 class dataset
 def create_graph_Imgs():
   """Creates a graph from saved GraphDef file and returns a saver."""
   # Creates graph from saved graph_def.pb.
@@ -38,30 +41,23 @@ def create_graph_Imgs():
     graph_def.ParseFromString(f.read())
     _ = tf.import_graph_def(graph_def, name='')
     
+# This is the NodeLookup class based on the Inception-v3 example on Github from tensorflow but ive customized it to work with a flask app, NodeLook up is to make naviaging the large dataset managable
 class NodeLookup(object):
-  """Converts integer node ID's to human readable labels."""
-
+  # Set up our flags
   def __init__(self,
                label_lookup_path=None,
                uid_lookup_path=None):
     if not label_lookup_path:
       label_lookup_path = os.path.join(
-          FLAGS.model_dir, cwd)
+          FLAGS.model_dir, 'imagenet_2012_challenge_label_map_proto.pbtxt')
     if not uid_lookup_path:
       uid_lookup_path = os.path.join(
-          FLAGS.model_dir, cwd)
+          FLAGS.model_dir, 'imagenet_synset_to_human_label_map.txt')
     self.node_lookup = self.load(label_lookup_path, uid_lookup_path)
 
+  # Load up our tensors and convert them to readable english
   def load(self, label_lookup_path, uid_lookup_path):
-    """Loads a human readable English name for each softmax node.
-
-    Args:
-      label_lookup_path: string UID to integer node ID.
-      uid_lookup_path: string UID to human-readable string.
-
-    Returns:
-      dict from integer node ID to human-readable string.
-    """
+    # Check for our files
     if not tf.gfile.Exists(uid_lookup_path):
       tf.logging.fatal('File does not exist %s', uid_lookup_path)
     if not tf.gfile.Exists(label_lookup_path):
@@ -94,17 +90,17 @@ class NodeLookup(object):
         tf.logging.fatal('Failed to locate: %s', val)
       name = uid_to_human[val]
       node_id_to_name[key] = name
-
+    # Return node
     return node_id_to_name
-
+  # Convert int id to string
   def id_to_string(self, node_id):
     if node_id not in self.node_lookup:
       return ''
     return self.node_lookup[node_id]
 
-
+# This is our regular run interface for checking digits
 def run_inference_on_image(image):
-  
+  # Check if files exist
   if not tf.gfile.Exists(image):
     tf.logging.fatal('File does not exist %s', image)
   image_data = tf.gfile.FastGFile(image, 'rb').read()
@@ -116,67 +112,94 @@ def run_inference_on_image(image):
   # Creates graph from saved GraphDef.
   create_graph()
 
+  # Start tensor sessionn
   with tf.Session() as sess:
     # Feed the image_data as input to the graph and get first prediction
     softmax_tensor = sess.graph.get_tensor_by_name('final_result:0')
 
+    # Store predictions of image data generated with softmax tensor
     predictions = sess.run(softmax_tensor, \
              {'DecodeJpeg/contents:0': image_data})
 
     # Sort to show labels of first prediction in order of confidence
     top_k = predictions[0].argsort()[-len(predictions[0]):][::-1]
 
+    # output nodes to cmd 
     for node_id in top_k:
         human_string = label_lines[node_id]
         score = predictions[0][node_id]
         print('%s (score = %.5f)' % (human_string, score))
-    
+        
+    # return nodes to post def
     return [(label_lines[node_id], float(predictions[0][node_id])) for node_id in top_k]
 
+# This runs the image interface of normal images
 def run_inference_on_image_full(image):
-    tf.Session()
-    print("Tensorflow session ready")
-    node_lookup = NodeLookup()
-    print("Node lookup loaded")
-    # Runs the softmax tensor by feeding the image_data as input to the graph.
-    softmax_tensor = sess.graph.get_tensor_by_name('final_result:0')
-    predictions = sess.run(softmax_tensor, {'DecodeJpeg/contents:0': image_data})
+  if not tf.gfile.Exists(image):
+    tf.logging.fatal('File does not exist %s', image)
+  image_data = tf.gfile.FastGFile(image, 'rb').read()
+
+  # Creates graph from saved GraphDef.
+  create_graph_Imgs()
+
+  # Get the labels
+  label_lines = [line.rstrip() for line
+                   in tf.gfile.GFile("./imagenet_synset_to_human_label_map.txt")]
+
+  # Start tensor session
+  with tf.Session() as sess:
+    # 'softmax:0': A tensor containing the normalized prediction across
+    #   1000 labels.
+    softmax_tensor = sess.graph.get_tensor_by_name('softmax:0')
+    predictions = sess.run(softmax_tensor,
+                           {'DecodeJpeg/contents:0': image_data})
+    
+    # Remove single-dimensional entries from predictions
     predictions = np.squeeze(predictions)
 
-    # sort the predictions
+    # Creates node ID --> English string lookup.
+    node_lookup = NodeLookup()
+
+    # Prepare predictions for returning
     top_k = predictions.argsort()[-FLAGS.num_top_predictions:][::-1]
+    for node_id in top_k:
+      human_string = node_lookup.id_to_string(node_id)
+      score = predictions[node_id]
+    # Return prediction
+    return [(label_lines[node_id], float(predictions[node_id])) for node_id in top_k]
 
-    # map to the friendly names and return the tuples
-    return [(node_lookup.id_to_string(node_id), float(predictions[node_id])) for node_id in top_k]
-
+# Home route
 @app.route("/")
 def index():
     return render_template("index.html")
 
+# Handle digit posts
 @app.route('/uploader', methods = ['POST'])
 def upload_file():
     if request.method == 'POST':
         f = request.files['file']
         f.save(f.filename)
         jsonResult = image_handler(f.filename)
-        return jsonResult
-    else:
-        return """<html><body>
-        Something went horribly wrong
-        </body></html>"""
-    
-@app.route('/imgUploader', methods = ['POST'])
-def upload_file_full():
-    if request.method == 'POST':
-        f = request.files['file']
-        f.save(f.filename)
-        jsonResult = image_handler_ImageNet(f.filename)
-        return jsonResult
+        return render_template('results.html', summary = jsonResult)
     else:
         return """<html><body>
         Something went horribly wrong
         </body></html>"""
 
+# Handle image posts
+@app.route('/imgUploader', methods = ['POST'])
+def upload_file_full():
+    if request.method == 'POST':
+        f = request.files['file']
+        f.save(f.filename)
+        jsonResult = image_handler(f.filename)
+        return render_template('results.html', summary = json.dumps(jsonResult))
+    else:
+        return """<html><body>
+        Something went horribly wrong
+        </body></html>"""
+
+# Apply tensorflow DNN to digit provided
 def image_handler(fname):
     image = (FLAGS.image_file if FLAGS.image_file else
       os.path.join(FLAGS.model_dir, fname))
@@ -185,6 +208,7 @@ def image_handler(fname):
     print("pridictions" , predictions)
     return jsonify(predictions=predictions)
 
+# Apply tensorflow DNN to image provided
 def image_handler_ImageNet(fname):
     image = (FLAGS.image_file if FLAGS.image_file else
       os.path.join(FLAGS.model_dir, fname))
@@ -192,18 +216,13 @@ def image_handler_ImageNet(fname):
     predictions = run_inference_on_image_full(image)
     print("pridictions" , predictions)
     return jsonify(predictions=predictions)
-
+    
 def main(_):
     app.run()
     
+# Sets up the flags for mdoel directory, image file and the amount of predictions returned.
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    # classify_image_graph_def.pb:
-    #   Binary representation of the GraphDef protocol buffer.
-    # imagenet_synset_to_human_label_map.txt:
-    #   Map from synset ID to a human readable string.
-    # imagenet_2012_challenge_label_map_proto.pbtxt:
-    #   Text representation of a protocol buffer mapping a label to synset ID.
     parser.add_argument(
       '--model_dir',
       type=str,
