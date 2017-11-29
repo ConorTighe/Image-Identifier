@@ -179,8 +179,8 @@ def upload_file():
     if request.method == 'POST':
         f = request.files['file']
         f.save(f.filename)
-        jsonResult = image_handler(f.filename)
-        return render_template('results.html', summary = jsonResult)
+        Result = image_handler(f.filename)
+        return render_template('results.html', response = Result)
     else:
         return """<html><body>
         Something went horribly wrong
@@ -192,8 +192,8 @@ def upload_file_full():
     if request.method == 'POST':
         f = request.files['file']
         f.save(f.filename)
-        jsonResult = image_handler(f.filename)
-        return render_template('results.html', summary = json.dumps(jsonResult))
+        Result = image_handler_ImageNet(f.filename)
+        return render_template('results.html', response = Result)
     else:
         return """<html><body>
         Something went horribly wrong
@@ -206,7 +206,7 @@ def image_handler(fname):
     print("Image: ", image)
     predictions = run_inference_on_image(image)
     print("pridictions" , predictions)
-    return jsonify(predictions=predictions)
+    return predictions
 
 # Apply tensorflow DNN to image provided
 def image_handler_ImageNet(fname):
@@ -215,7 +215,7 @@ def image_handler_ImageNet(fname):
     print("Image: ", image)
     predictions = run_inference_on_image_full(image)
     print("pridictions" , predictions)
-    return jsonify(predictions=predictions)
+    return predictions
     
 def main(_):
     app.run()

@@ -94,9 +94,10 @@
             <button id="drawmode">Drawing mode</button>
         </div>
         <div id="jumboheader" class="jumbotron" align="center" style="margin-bottom:0;">
-            <p >select the image you drew or an already existing image below.</p>
+            <p >Switch between draw and png mode with the buttons above. Your image can be dragged around in png mode and then switched back to draw mode to continue editing. The Digit Recognizer uses my custom trained model to identify images and the image recogniser uses the ImageNet 2012 dataset model provided by tensorflow.org</p>
         </div>
         <div id="jumbo3" class="jumbotron" align="center" style="margin-bottom:0;">
+        <h1 >Digit Recognizer</h1>
         <form action = "http://localhost:5000/uploader" method = "POST" 
                   enctype = "multipart/form-data" >
             <input type = "file" name = "file" onchange="readURL1(this);" />
@@ -104,7 +105,8 @@
             <input id="predictbtn" class="btn btn-success" type = "submit"/>
         </form>
         </div>
-        <div id="jumbo3" class="jumbotron" align="center" style="margin-bottom:0;">
+        <div id="jumbo4" class="jumbotron" align="center" style="margin-bottom:0;">
+        <h1 >Image Recognizer</h1>
         <form action = "http://localhost:5000/imgUploader" method = "POST" 
                   enctype = "multipart/form-data" >
             <input type = "file" name = "file" onchange="readURL2(this);" />
