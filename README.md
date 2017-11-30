@@ -104,6 +104,23 @@ Start using the app to test your model new model, you can replace the digits Mod
 
 ---
 
+## Testing
+
+Draw an image:
+![test1](test1.png "Drawing")
+
+Upload digit:
+![test2](test2.png "Uploading")
+
+Predictions:
+![test2](test3.png "Predicting")
+
+Try an image:
+![test4](test4.png "Panda")
+
+Prections for panda:
+![test5](test5.png "Panda predictions")
+
 ## Refrences
 
 -[TensorFlow](https://www.tensorflow.org/tutorials/image_recognition)
