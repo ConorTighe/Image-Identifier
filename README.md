@@ -96,7 +96,7 @@ Start using the app to test your model new model, you can replace the digits Mod
 
 ### Deep Learning Expert Brais Martinez discussing Deep learning:
 
-[![Deep Learning](https://www.youtube.com/watch?v=l42lr8AlrHk/0.jpg)](https://www.youtube.com/watch?v=l42lr8AlrHk)
+[![Deep Learning](https://img.youtube.com/vi/watch?v=l42lr8AlrHk/0.jpg)](https://www.youtube.com/watch?v=l42lr8AlrHk)
 
 ---
 
