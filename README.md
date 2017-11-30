@@ -12,21 +12,24 @@ This is the solution for the Emerging technology [project](https://emerging-tech
 
 ## Architecture
 
--Flask: *Flask is a micro web framework written in Python and based on the Werkzeug toolkit and Jinja2 template engine. This is what I used to host the application and server the html pages to the user*
+- Flask: *Flask is a micro web framework written in Python and based on the Werkzeug toolkit and Jinja2 template engine. This is what I used to host the application and server the html pages to the user*
 
--FabricJs: *Fabric.js is a powerful and simple. Javascript HTML5 canvas library. Fabric provides interactive object model on top of canvas element. I use this to implement a canvas the user can draw digits on along with being easily saved locally.*
+- FabricJs: *Fabric.js is a powerful and simple. Javascript HTML5 canvas library. Fabric provides interactive object model on top of canvas element. I use this to implement a canvas the user can draw digits on along with being easily saved locally.*
 
--Tensorflow: *TensorFlow is an open-source software library for dataflow programming across a range of tasks. This is what I use to implement the Inception-v3 model for predicting the images. Once model is retrained for digit images and another is trained for 1000 classes.*
+- Tensorflow: *TensorFlow is an open-source software library for dataflow programming across a range of tasks. This is what I use to implement the Inception-v3 model for predicting the images. Once model is retrained for digit images and another is trained for 1000 classes.*
 
--AJAX: *AJAX allows web pages to be updated asynchronously by exchanging data with a web server behind the scenes. This means that it is possible to update parts of a web page, without reloading the whole page. This is what
+- AJAX: *AJAX allows web pages to be updated asynchronously by exchanging data with a web server behind the scenes. This means that it is possible to update parts of a web page, without reloading the whole page. This is what
 I use to implment the posts of the image to tensorflow and then display them in a bootstrap table.*
 
--Bootstrap: *Bootstrap is an open source toolkit for developing with HTML, CSS, and JS. This is what I use to create the AI and display the tensor results.*
+- Bootstrap: *Bootstrap is an open source toolkit for developing with HTML, CSS, and JS. This is what I use to create the AI and display the tensor results.*
 
 ### How these interact:
 Flask opens the index.html file on load to show the webpage to the user, user can then draw an image and convert it to .png. If the user saves the png locally they can then go to the Image recongnizer section and select it fromt he directory they saved it to and then the image will be displayed. The user can click the submit button and a AJAX call will be made to the appropriate flask url which will call the tensorflow methods and pass the image filename to them. tensoflow will retrieve the image and then being to use the tensorflow Inception-v3 model to predict the image. Once the predictions are made the results are returned as a list of what the image most likly is starting with the highed score, these are then displayed to the user.
 
 ---
+
+## User Controls
+Switch between draw and png mode with the buttons above. Your image can be dragged around in png mode and then switched back to draw mode to continue editing. Choose an image and then click submit to start tensorflow.
 
 ## Requirments
 - Python 3.6: https://www.python.org/downloads/
