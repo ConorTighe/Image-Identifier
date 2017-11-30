@@ -1,8 +1,8 @@
 # Emerging technologies Project
-Name: Conor Tighe
-GMIT ID: G00314417
-Application: Image-Identifier
-Lecturer: Ian McLoughlin
+-Name: Conor Tighe
+-GMIT ID: G00314417
+-Application: Image-Identifier
+-Lecturer: Ian McLoughlin
 
 This is the solution for the Emerging technology [project](https://emerging-technologies.github.io/problems/project.html), It can recongnize digits + 1000 other classes.
 
@@ -18,7 +18,7 @@ This is the solution for the Emerging technology [project](https://emerging-tech
 -Tensorflow: *TensorFlow is an open-source software library for dataflow programming across a range of tasks. This is what I use to implement the Inception-v3 model for predicting the images. Once model is retrained for digit images and another is trained for 1000 classes.*
 
 -AJAX: *AJAX allows web pages to be updated asynchronously by exchanging data with a web server behind the scenes. This means that it is possible to update parts of a web page, without reloading the whole page. This is what
-I use to implment the posts of the image to tensorflow and then display them in a bootstrap table.
+I use to implment the posts of the image to tensorflow and then display them in a bootstrap table.*
 
 -Bootstrap: *Bootstrap is an open source toolkit for developing with HTML, CSS, and JS. This is what I use to create the AI and display the tensor results.*
 
