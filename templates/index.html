@@ -43,6 +43,40 @@
             });
         }
         
+        $(function() {
+            $('digitpredictbtn').click(function() {
+            var form_data = new FormData($('#fileupload'));
+            $.ajax({
+                url: '/uploader',
+                data: $('form').serialize(),
+                type: 'POST',
+                success: function(response) {
+                console.log(response);
+                },
+                error: function(error) {
+                console.log(error);
+                }
+            });
+          });
+        });
+        
+        $(function() {
+            $('imgpredictbtn').click(function() {
+            var form_data = new FormData($('#imgfileupload'));
+            $.ajax({
+                url: '/imgUploader',
+                data: $('form').serialize(),
+                type: 'POST',
+                success: function(response) {
+                console.log(response);
+                },
+                error: function(error) {
+                console.log(error);
+                }
+            });
+          });
+        });
+        
         function readURL1(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -81,10 +115,21 @@
                         <div class="row" align="centre">
                         <h1 >Image Identifier</h1>
                         <p class="lead">For Identifering Images and finding related information!</p>
-                        <p class="lead">Powered by</p>
-                        <img id="flask" class="img-responsive" src="/static/img/flasklogo.png" align="left" style="height: 150px; width: 320px" />
-                        <img id="reddit" class="img-responsive" src="/static/img/fbjs.png" align="left" style="height: 150px; width: 320px" />
-                        <img id="tensor" class="img-responsive" src="/static/img/tensorflow.png" align="left" style="height: 150px; width: 320px" />
+                        <p class="lead">Powered by..</p>
+                        <div class="row">
+                            <div class="col-md-2 col-md-offset-1">
+                                 <img id="flask" class="img-responsive" src="/static/img/flasklogo.png" align="left" style="height: 150px; width: 320px" />
+                            </div>
+                            <div class="col-md-2">
+                                <img id="reddit" class="img-responsive" src="/static/img/fbjs.png" align="left" style="height: 150px; width: 320px" />
+                            </div>
+                            <div class="col-md-2">
+                                <img id="tensorflow" class="img-responsive" src="/static/img/tensorflow.png" align="left" style="height: 150px; width: 320px" />
+                            </div>
+                            <div class="col-md-2">
+                                <img id="ajax" class="img-responsive" src="/static/img/ajax.png" align="left" style="height: 150px; width: 320px" />
+                            </div>
+                        </div>
                         </div>
                 </div>
         </div>
@@ -98,20 +143,20 @@
         </div>
         <div id="jumbo3" class="jumbotron" align="center" style="margin-bottom:0;">
         <h1 >Digit Recognizer</h1>
-        <form action = "http://localhost:5000/uploader" method = "POST" 
+        <form  id="fileupload" action="/uploader" method="POST" role="form"
                   enctype = "multipart/form-data" >
             <input type = "file" name = "file" onchange="readURL1(this);" />
             <img id="img1" class="img-thumbnail" src="#" />
-            <input id="predictbtn" class="btn btn-success" type = "submit"/>
+            <input id="digitpredictbtn" class="btn btn-success" type = "submit"/>
         </form>
         </div>
         <div id="jumbo4" class="jumbotron" align="center" style="margin-bottom:0;">
         <h1 >Image Recognizer</h1>
-        <form action = "http://localhost:5000/imgUploader" method = "POST" 
+        <form  id="imgfileupload" action="/imgUploader" method="POST" role="form"
                   enctype = "multipart/form-data" >
             <input type = "file" name = "file" onchange="readURL2(this);" />
             <img id="img2" class="img-thumbnail" src="#" />
-            <input id="predictbtn" class="btn btn-success" type = "submit" value="Image" />
+            <input id="imgpredictbtn" class="btn btn-success" type = "submit" value="Image" />
         </form>
     </div>
     </body>
