@@ -106,6 +106,8 @@ Start using the app to test your model new model, you can replace the digits Mod
 
 ## Testing
 
+Here are some screen-shots of the app using digits and images.
+
 Draw an image:
 ![test1](test1.png "Drawing")
 
