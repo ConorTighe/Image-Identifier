@@ -1,8 +1,9 @@
 # Emerging technologies Project
--Name: Conor Tighe
--GMIT ID: G00314417
--Application: Image-Identifier
--Lecturer: Ian McLoughlin
+
+- Name: Conor Tighe
+- GMIT ID: G00314417
+- Application: Image-Identifier
+- Lecturer: Ian McLoughlin
 
 This is the solution for the Emerging technology [project](https://emerging-technologies.github.io/problems/project.html), It can recongnize digits + 1000 other classes.
 
