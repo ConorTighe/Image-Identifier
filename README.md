@@ -53,8 +53,7 @@ Neural networks are a set of algorithms, modeled loosely after the human brain, 
 
 ### Non-deep Vs Deep neural networks:
 
-[Deep Learning](/static/img/NNvsDNN.png)
-
+![Deep Learning](/static/img/NNvsDNN.png "NN Vs DNN")
 ### Retraining Inception-v3 for digits
 
 #### Step 1:
