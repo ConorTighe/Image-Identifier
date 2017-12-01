@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!–– Page title and imports ––>
   <title>Image recognition</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,9 +10,9 @@
   <link href="https://fonts.googleapis.com/css?family=Press+Start+2P|Roboto" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://rawgit.com/kangax/fabric.js/master/dist/fabric.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    
+  <script src="https://rawgit.com/kangax/fabric.js/master/dist/fabric.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <!–– Outline the canvas ––>
     <style type='text/css'>
         #sheet {
             border:1px solid black;
@@ -19,8 +20,9 @@
     </style>
     <script type='text/javascript'>
        
-        
+        // What we load in once the index page is served
         window.onload = function() {
+            // Everything for out canvas and image preview below 
             var preview = document.querySelector('#imgprev');
             var canvas = new fabric.Canvas('sheet');
             canvas.isDrawingMode = true;
@@ -28,6 +30,7 @@
             canvas.backgroundColor="black";
             canvas.freeDrawingBrush.color = "#ffffff";
             
+            // Handles the call from the save image button
             $(document).on("click", "#savepng", function() {
                 canvas.isDrawingMode = false;
                 var img = new Image();
@@ -37,11 +40,13 @@
                 preview.src = img.src;
             });
             
+            // Switch back to draw mode
             $(document).on("click", "#drawmode", function() {
             canvas.isDrawingMode = true;
             });
         }
         
+        // AJAX Call for the digit tensor
         $(function() {
             $('digitpredictbtn').click(function() {
             var form_data = new FormData($('#fileupload'));
@@ -59,6 +64,7 @@
           });
         });
         
+        // AJAX call for the image tensor
         $(function() {
             $('imgpredictbtn').click(function() {
             var form_data = new FormData($('#imgfileupload'));
@@ -76,6 +82,7 @@
           });
         });
         
+        // Display your digit
         function readURL1(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -91,6 +98,7 @@
             }
         }
         
+        // Display your image
         function readURL2(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -108,6 +116,7 @@
     </script>
 </head>
 <body>
+    <!–– Main jumbotron that contains title of the apps and info about it ––>
     <div class="jumbotron" id="jumbo1">
                 <div  class="container">
                         <div class="row" align="centre">
@@ -131,18 +140,18 @@
                         </div>
                 </div>
         </div>
+        <!–– Handles drawing and canvas ––>
         <div id="jumbo2" class="jumbotron" align="center" style="margin-bottom:0;">
             <canvas id="sheet" width="400" height="400"></canvas>
             <button id="savepng">Convert to PNG</button>
             <button id="drawmode">Drawing mode</button>
         </div>
+        <!–– Handles previewing canvas image after being converted to png ––>
         <div id="jumboheader" class="jumbotron" align="center" style="margin-bottom:0;">
-             <p >Switch between draw and png mode with the buttons above. Your image can be dragged around in png mode and then switched back to draw mode to continue editing. The Digit Recognizer uses my custom trained model to identify images and the image recogniser uses the ImageNet 2012 dataset model provided by tensorflow.org</p>
-            <div class="img__wrap">
+             <p >Switch between draw and png mode with the buttons above. Your image can be dragged around in png mode and then switched back to draw mode to continue editing. The Digit Recognizer uses my custom trained model to identify images and the image recogniser uses the ImageNet 2012 dataset model provided by tensorflow.org. After converting to .png ight click me then Save image!</p>
             <img id="imgprev" class="img-thumbnail" src="#" />
-            <p class="img__description">Right click me then Save image!</p>
-            </div>
         </div>
+        <!–– Handles digit displaying and triggering digit AJAX ––>
         <div id="jumbo3" class="jumbotron" align="center" style="margin-bottom:0;">
         <h1 >Digit Recognizer</h1>
         <form  id="fileupload" action="/uploader" method="POST" role="form"
@@ -152,6 +161,7 @@
             <input id="digitpredictbtn" class="btn btn-success" type = "submit"/>
         </form>
         </div>
+        <!–– Handles image displaying and triggering image AJAX ––>
         <div id="jumbo4" class="jumbotron" align="center" style="margin-bottom:0;">
         <h1 >Image Recognizer</h1>
         <form  id="imgfileupload" action="/imgUploader" method="POST" role="form"

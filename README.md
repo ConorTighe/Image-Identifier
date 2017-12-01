@@ -114,7 +114,7 @@ Try an image:
 ![test4](/static/img/test4.png "Panda")
 
 Predictions for panda:
-![test5](test5.png "Panda predictions")
+![test5](static/img/test5.png "Panda predictions")
 
 ## References
 

@@ -8,7 +8,6 @@ import sys
 import tarfile
 import json
 from flask import Flask, render_template, request, jsonify
-from PIL import Image
 import requests
 import tensorflow as tf
 import numpy as np
@@ -16,6 +15,7 @@ from six.moves import urllib
 
 app = Flask(__name__)
 
+# For setting the flags for the image tensor
 FLAGS = None
 
 # Get the current directory
@@ -40,7 +40,7 @@ def create_graph_Imgs():
     graph_def.ParseFromString(f.read())
     _ = tf.import_graph_def(graph_def, name='')
     
-# This is the NodeLookup class based on the Inception-v3 example on Github from tensorflow but ive customized it to work with a flask app, NodeLook up is to make naviaging the large dataset managable
+# This is the NodeLookup class based on the Inception-v3 example on Github from tensorflow but ive customized it to work with a flask app, NodeLookup is to make naviaging the large dataset managable considering we are dealing with nodes within nodes unlike the MNIST trained set
 class NodeLookup(object):
   # Set up our flags
   def __init__(self,
