@@ -5,7 +5,7 @@
 - Application: Image-Identifier
 - Lecturer: Ian McLoughlin
 
-This is the solution for the Emerging technology [project](https://emerging-technologies.github.io/problems/project.html), It can recognize digits + 1000 other classes.
+This is the solution for the Emerging technology [project](https://emerging-technologies.github.io/problems/project.html), It can recognize digits + 1000 other classes using only TensorFlow.
 
 # Overview:
 *This application accepts an image from the user, displays it to the user then attempts to predict what the image is once submitted to a Inception-v3 model. You can upload a digit or draw your own digit inside the application and the retrained Inception-v3 model for digits will predict what digit was in the image based on the MNIST dataset . You can also upload any image to a separate model that will try classify the image into 5 of 1000 possible classes used for Inception-v3 with tensorflow.*
