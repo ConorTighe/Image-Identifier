@@ -45,7 +45,7 @@ python app.py
 ---
 
 ## Deep Neural Network Implementation
-This application uses a Deep Neural Network called Inception-v3 to predict images. The reason I decided to choose this DNN Model is because its the most accurate model offered by tensorflow with a error rate of only 3.46%.
+This application uses a Deep Neural Network called Inception-v3 to predict images. The reason I decided to choose this DNN Model is because its the most accurate model offered by tensorflow for image recognition.
 I first set up the application with the regular model that offers 1000 classes, I then retrained the model Inception-v3 to recognize a class of digits using the 60,000 images offered by the [MNIST dataset](http://yann.lecun.com/exdb/mnist/).
 
 ### What is a Neural Network?
@@ -91,7 +91,7 @@ Clone the image retraining repository provided by [akshaypai](https://github.com
  
 ![Enter in cmd](/static/img/retrain_model.png "Enter in cmd")
 
-This will create an new .pb file named output.pb, this will overwrite the output.pb that I have provided in the repo, the model in the repo in trained at 4000 steps as this is the recommended amount for a typical DNN model to get a accurate result, but you can incrase the accuracy of the model by increasing the training steps. The more steps you set it to the longer it will take to retrain the model.
+This will create an new .pb file named output.pb, this will overwrite the output.pb that I have provided in the repo, the model in the repo in trained at 6000 steps. 4000 is the default and is the recommended amount for a typical DNN model to get a accurate result, but you can incrase the accuracy of the model by increasing the training steps. The more steps you set it to the longer it will take to retrain the model.
 
 #### Step 4:
 Start using the app to test your model new model, you can replace the digits Model with any set of images you wish and rename the folders appropriately, Inception-v3 could be retrained you identify any class of images you like cars,clothes etc..
@@ -110,11 +110,25 @@ Upload digit:
 Predictions:
 ![test2](/static/img/test3.png "Predicting")
 
-Try an image:
+Try the test image from tensorflow.org:
 ![test4](/static/img/test4.png "Panda")
 
 Predictions for panda:
 ![test5](static/img/test5.png "Panda predictions")
+
+Try my dog:
+![test6](/static/img/test6.png "Dog")
+
+Predictions for my dog:
+![test7](static/img/test7.png "Dog predictions")
+
+---
+
+## Application accuracy:
+
+The first model for digits I created used 4000 for recognition and managed to achieve a accuracy of 92%, the expected accuracy for a trained tensorflow Inception-v3 model is 90-95% according to the tensorflow site. After using the canvas to draw digits tensorflow was still mixing up 0 and 8 along with 2 and 5, So to make the application better at distinguishing between the numbers by adding images drawn by the fabricJs canvas to the MNIST dataset, the reason I did this is because I thought the images Inception v3 where being trained by where very low quality and blurry compared to the ones being given to it for recognition from the canvas and training input has a major impact on the quality of DNN results. After expanding the input I retrained the model at 6000 steps, that resulted in a accuracy of 94%. It took my computer afew hours to train the digit model but with enough steps and computing resources the accuracy of this model could be improved even more, possibly to the point where it would be on par with the Inception-v3 model for normal images that has a error rate of only 3.46%.
+
+
 
 ## References
 
