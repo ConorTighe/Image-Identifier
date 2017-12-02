@@ -99,7 +99,7 @@ Start using the app to test your model new model, you can replace the digits Mod
 ---
 
 ## User Controls
-Switch between draw and png mode with the buttons above. Your image can be dragged around in png mode and then switched back to draw mode to continue editing. Choose an image and then click submit to start tensorflow.
+Switch between draw and png mode with the buttons above. Your digit can be dragged around in png mode and then switched back to draw mode to continue editing. Choose an image and then click submit to start tensorflow.
 
 Draw an image:
 ![test1](/static/img/test1.png "Drawing")
