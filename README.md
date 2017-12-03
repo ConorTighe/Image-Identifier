@@ -91,7 +91,10 @@ Clone the image retraining repository provided by [akshaypai](https://github.com
  
 ![Enter in cmd](/static/img/retrain_model.png "Enter in cmd")
 
-This will create an new .pb file named output.pb, this will overwrite the output.pb that I have provided in the repo, the model in the repo in trained at 6000 steps. 4000 is the default and is the recommended amount for a typical DNN model to get a accurate result, but you can incrase the accuracy of the model by increasing the training steps. The more steps you set it to the longer it will take to retrain the model.
+It will start to create the bottlenecks:
+![Enter in cmd](/static/img/btlneck.png "bottlenecks")
+
+Once this is complete it will train the model with the bottlenecks created from the images. This will create an new .pb file named output.pb, this will overwrite the output.pb that I have provided in the repo, the model in the repo in trained at 6000 steps. 4000 is the default and is the recommended amount for a typical DNN model to get a accurate result, but you can incrase the accuracy of the model by increasing the training steps. The more steps you set it to the longer it will take to retrain the model.
 
 #### Step 4:
 Start using the app to test your model new model, you can replace the digits Model with any set of images you wish and rename the folders appropriately, Inception-v3 could be retrained you identify any class of images you like cars,clothes etc..
