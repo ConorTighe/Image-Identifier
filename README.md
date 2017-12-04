@@ -10,6 +10,9 @@ This is the solution for the Emerging technology [project](https://emerging-tech
 # Overview:
 *This application accepts an image from the user, displays it to the user then attempts to predict what the image is once submitted to a Inception-v3 model. You can upload a digit or draw your own digit inside the application and the retrained Inception-v3 model for digits will predict what digit was in the image based on the MNIST dataset . You can also upload any image to a separate model that will try classify the image into 5 of 1000 possible classes used for Inception-v3 with tensorflow.*
 
+### About me:
+I'm a 22 year old final year Software Development student in Galway-Mayo IT, I'm originally from Donegal.
+
 ## Architecture
 
 - Flask: *Flask is a micro web framework written in Python and based on the Werkzeug toolkit and Jinja2 template engine. This is what I used to host the application and server the html pages to the user*
